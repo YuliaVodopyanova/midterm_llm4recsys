@@ -1,6 +1,6 @@
 # Kaggle returned scores
 
-All 17 files submitted to `sweettv-tv-program-recommender` (MAP@5). Private score is the reported one; the public score is shown for completeness. Files were designed after seeing earlier returned scores, so the best private score is an optimistic estimate.
+All 24 files submitted to `sweettv-tv-program-recommender` (MAP@5). Private score is the reported one; the public score is shown for completeness. Files 1-17 are the hand-set own-history ranker, 18-24 are LightGBM rerankers (notebook Sections 15-18, except #18). Files were designed after seeing earlier returned scores, so the best private score is an optimistic estimate.
 
 | # | File (`outputs/submission_<name>.csv`) | Private | Public | What changed |
 |---|---|---|---|---|
@@ -20,6 +20,15 @@ All 17 files submitted to `sweettv-tv-program-recommender` (MAP@5). Private scor
 | 14 | `gt_th50_g1_tau6` | 0.42430 | 0.43857 | recency decay tau = 6 weeks |
 | 15 | `gt_th50_g1_tau12` | 0.42702 | 0.44344 | recency decay tau = 12 weeks |
 | 16 | `gt_th50_g1_tau24` | 0.42824 | 0.44342 | recency decay tau = 24 weeks |
-| 17 | `gt_th50_g1_tau18` | 0.42853 | 0.44375 | recency decay tau = 18 weeks (DESIGNATED FINAL) |
+| 17 | `gt_th50_g1_tau18` | 0.42853 | 0.44375 | recency decay tau = 18 weeks (best hand-set ranker) |
+| 18 | (first reranker version) | 0.43412 | 0.45057 | LightGBM reranker written in the Claude chat; code and file were later removed, not reproducible |
+| 19 | `lgbm_agent` | 0.43419 | 0.44396 | Section 15, single seed, 30 popular candidates |
+| 20 | `lgbm_v0` | 0.43240 | 0.45010 | Section 17, simple reranker, own-history candidates only, binary labels (DESIGNATED FINAL) |
+| 21 | `lgbm_v1` | 0.43558 | 0.44641 | Section 16, grid-best parameters (15 leaves, 400 trees, lr 0.03, 50 per leaf) |
+| 22 | `lgbm_v3` | 0.43365 | 0.44485 | Section 16, 50 popular candidates |
+| 23 | `lgbm_blend` | 0.43526 | 0.44595 | Section 18, within-user rank blend of S15, v0, v1 |
+| 24 | `lgbm_v2` | 0.43614 | 0.44292 | Section 16, five-seed average (seeds 42-46) of the Section 15 configuration (best returned score) |
 
-Designated final submission: `submission_gt_th50_g1_tau18.csv` (sha256 518d87537ce2760cd827c6432b7f1ed899d616b6a10162a645d358c9a136db81), private 0.42853.
+Designated final submission: `outputs/submission_lgbm_v0.csv`, private 0.43240, public 0.45010 (sha256 prefix 94ce2520; run `shasum -a 256` on the committed file and paste the full hash here). Best returned file: `submission_lgbm_v2.csv`, private 0.43614. Best hand-set file: `submission_gt_th50_g1_tau18.csv`, private 0.42853.
+
+The seven reranker scores lie within 0.0037 of each other and validation does not separate them; the designated file `lgbm_v0` has the highest public score among the existing files (0.45010) but not the highest private one; private scores were visible when it was chosen.
